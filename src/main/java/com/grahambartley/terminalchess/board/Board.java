@@ -13,6 +13,7 @@ import java.util.Optional;
 import com.grahambartley.terminalchess.constants.HorizontalSpaceIndex;
 import com.grahambartley.terminalchess.constants.VerticalSpaceIndex;
 import com.grahambartley.terminalchess.pieces.Pawn;
+import com.grahambartley.terminalchess.pieces.Rook;
 
 public class Board {
   private static Board instance;
@@ -21,17 +22,12 @@ public class Board {
   private Board() {
     this.board = new Space[8][8];
 
+    // add spaces to the board
     for (int i = 0; i < 8; i++) {
       String h = HorizontalSpaceIndex.getNameByIndex(i);
       for (int j = 0; j < 8; j++) {
         String v = VerticalSpaceIndex.getNameByIndex(j);
-        if (i == 1) {
-          board[i][j] = new Space(h, v, new Pawn(true));
-        } else if (i == 6) {
-          board[i][j] = new Space(h, v, new Pawn(false));
-        } else {
-          board[i][j] = new Space(h, v, null);
-        }
+        board[i][j] = new Space(h, v, null);
       }
     }
   }
@@ -44,23 +40,33 @@ public class Board {
     return instance;
   }
 
+  public void setUpPieces() {
+    for (int i = 0; i < 8; i++) {
+      board[1][i].setPiece(new Pawn(true));
+      board[6][i].setPiece(new Pawn(false));
+    }
+    board[0][0].setPiece(new Rook(true));
+    board[0][7].setPiece(new Rook(true));
+    board[7][0].setPiece(new Rook(false));
+    board[7][7].setPiece(new Rook(false));
+  }
+
   public Optional<Space> getSpace(char h, char v) {
     return getSpace(String.valueOf(h), String.valueOf(v));
   }
 
   public Optional<Space> getSpace(String h, String v) {
-    int hIndex = HorizontalSpaceIndex.getIndexByName(h);
-    int vIndex = VerticalSpaceIndex.getIndexByName(v);
+    Integer hIndex = HorizontalSpaceIndex.getIndexByName(h);
+    Integer vIndex = VerticalSpaceIndex.getIndexByName(v);
 
     try {
       return Optional.of(board[hIndex][vIndex]);
-    } catch (IndexOutOfBoundsException e) {
+    } catch (IndexOutOfBoundsException | NullPointerException e) {
       return Optional.empty();
     }
   }
 
   public boolean isPathClear(Space currentSpace, Space proposedSpace) {
-    getSpacesBetween(currentSpace, proposedSpace).forEach(space -> System.out.println(space.getV() + space.getH()));
     return !getSpacesBetween(currentSpace, proposedSpace)
       .stream()
       .anyMatch(Space::hasPiece);

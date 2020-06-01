@@ -39,6 +39,7 @@ public class TerminalChess {
     }
 
     private void play() {
+        board.setUpPieces();
         while (state != State.EXIT) {
             if (state == State.MENU) {
                 showMenu();
@@ -111,6 +112,7 @@ public class TerminalChess {
                 );
                 if (!currentSpaceOptional.isPresent() || !proposedSpaceOptional.isPresent()) {
                     moveOption = Optional.empty();
+                    display(Messages.INVALID_MOVE_ERROR.getText());
                 } else {
                     proposedMove.addAll(asList(currentSpaceOptional.get(), proposedSpaceOptional.get()));
                 }
