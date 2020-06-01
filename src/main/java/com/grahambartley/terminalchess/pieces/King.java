@@ -4,7 +4,6 @@ import static java.lang.Math.abs;
 
 public class King extends Piece {
   public King(boolean isWhite) {
-    this.active = true;
     this.isWhite = isWhite;
     this.isAbleToJump = false;
     this.emoji = isWhite ? "♔" : "♚";

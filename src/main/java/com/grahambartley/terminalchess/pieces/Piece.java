@@ -11,7 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class Piece {
-  public boolean active;
   public boolean isWhite;
   public boolean isAbleToJump;
   public String emoji;

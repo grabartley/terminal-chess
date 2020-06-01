@@ -130,7 +130,6 @@ public class TerminalChess {
 
     private void performCapture(Space captureSpace) {
         Piece pieceToCapture = captureSpace.getPiece();
-        pieceToCapture.setActive(false);
         if (isWhiteTurn) {
             capturedBlackPieces.add(pieceToCapture);
         } else {

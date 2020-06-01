@@ -8,7 +8,6 @@ public class Pawn extends Piece {
   private boolean hasMoved;
 
   public Pawn(boolean isWhite) {
-    this.active = true;
     this.isWhite = isWhite;
     this.isAbleToJump = false;
     this.emoji = isWhite ? "♙" : "♟";
