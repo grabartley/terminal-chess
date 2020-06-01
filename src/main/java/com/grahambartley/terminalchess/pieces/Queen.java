@@ -7,4 +7,9 @@ public class Queen extends Piece {
     this.isAbleToJump = false;
     this.emoji = isWhite ? "♕" : "♛";
   }
+
+  @Override
+  public boolean isInvalidMove(int hDiff, int vDiff, boolean isCapturing) {
+    return false;
+  }
 }

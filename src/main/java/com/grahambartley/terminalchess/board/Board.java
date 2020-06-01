@@ -13,6 +13,7 @@ import java.util.Optional;
 import com.grahambartley.terminalchess.constants.HorizontalSpaceIndex;
 import com.grahambartley.terminalchess.constants.VerticalSpaceIndex;
 import com.grahambartley.terminalchess.pieces.Bishop;
+import com.grahambartley.terminalchess.pieces.King;
 import com.grahambartley.terminalchess.pieces.Knight;
 import com.grahambartley.terminalchess.pieces.Pawn;
 import com.grahambartley.terminalchess.pieces.Queen;
@@ -52,6 +53,7 @@ public class Board {
     board[0][1].setPiece(new Knight(true));
     board[0][2].setPiece(new Bishop(true));
     board[0][3].setPiece(new Queen(true));
+    board[0][4].setPiece(new King(true));
     board[0][5].setPiece(new Bishop(true));
     board[0][6].setPiece(new Knight(true));
     board[0][7].setPiece(new Rook(true));
@@ -59,6 +61,7 @@ public class Board {
     board[7][0].setPiece(new Rook(false));
     board[7][1].setPiece(new Knight(false));
     board[7][2].setPiece(new Bishop(false));
+    board[7][3].setPiece(new King(false));
     board[7][4].setPiece(new Queen(false));
     board[7][5].setPiece(new Bishop(false));
     board[7][6].setPiece(new Knight(false));
