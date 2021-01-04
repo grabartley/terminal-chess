@@ -8,5 +8,5 @@ import lombok.Getter;
 public enum Messages {
   INVALID_MOVE_ERROR("Invalid move");
 
-  private String text;
+  private final String text;
 }

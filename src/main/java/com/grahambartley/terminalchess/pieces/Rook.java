@@ -8,9 +8,9 @@ public class Rook extends Piece {
   }
 
   @Override
-  public boolean isInvalidMove(int hDiff, int vDiff, boolean isCapturing) {
+  public boolean isValidMove(int hDiff, int vDiff, boolean isCapturing) {
     boolean isMovingHorizontally = hDiff == 0 && vDiff != 0;
     boolean isMovingVertically = vDiff == 0 && hDiff != 0;
-    return !(isMovingHorizontally || isMovingVertically);
+    return isMovingHorizontally || isMovingVertically;
   }
 }

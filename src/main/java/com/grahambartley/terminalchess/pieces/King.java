@@ -10,11 +10,9 @@ public class King extends Piece {
   }
 
   @Override
-  public boolean isInvalidMove(int hDiff, int vDiff, boolean isCapturing) {
-    boolean isMovingOneSquareInAnyDirection = 
-      (abs(hDiff) == 1 && abs(vDiff) == 1) ||
-      (hDiff == 0 && abs(vDiff) == 1) ||
-      (vDiff == 0 && abs(hDiff) == 1);
-    return !isMovingOneSquareInAnyDirection;
+  public boolean isValidMove(int hDiff, int vDiff, boolean isCapturing) {
+    return (abs(hDiff) == 1 && abs(vDiff) == 1) ||
+            (hDiff == 0 && abs(vDiff) == 1) ||
+            (vDiff == 0 && abs(hDiff) == 1);
   }
 }

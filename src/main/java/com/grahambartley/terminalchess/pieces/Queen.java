@@ -8,7 +8,7 @@ public class Queen extends Piece {
   }
 
   @Override
-  public boolean isInvalidMove(int hDiff, int vDiff, boolean isCapturing) {
-    return false;
+  public boolean isValidMove(int hDiff, int vDiff, boolean isCapturing) {
+    return true;
   }
 }

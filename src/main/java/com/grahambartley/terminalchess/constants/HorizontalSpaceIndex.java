@@ -15,8 +15,8 @@ public enum HorizontalSpaceIndex {
   Seven(6, "7"),
   Eight(7, "8");
 
-  private int index;
-  private String name;
+  private final int index;
+  private final String name;
 
   public static String getNameByIndex(int index) {
     for (HorizontalSpaceIndex e : values()) {

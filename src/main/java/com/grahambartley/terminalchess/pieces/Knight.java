@@ -10,8 +10,7 @@ public class Knight extends Piece {
   }
 
   @Override
-  public boolean isInvalidMove(int hDiff, int vDiff, boolean isCapturing) {
-    boolean isMovingInLShape = (abs(hDiff) == 1 && abs(vDiff) == 2) || (abs(hDiff) == 2 && abs(vDiff) == 1);
-    return !isMovingInLShape;
+  public boolean isValidMove(int hDiff, int vDiff, boolean isCapturing) {
+    return (abs(hDiff) == 1 && abs(vDiff) == 2) || (abs(hDiff) == 2 && abs(vDiff) == 1);
   }
 }

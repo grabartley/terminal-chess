@@ -21,10 +21,10 @@ import java.util.Optional;
 
 public class TerminalChess {
     private State state;
-    private Board board;
+    private final Board board;
     private boolean isWhiteTurn;
-    private List<Piece> capturedWhitePieces;
-    private List<Piece> capturedBlackPieces;
+    private final List<Piece> capturedWhitePieces;
+    private final List<Piece> capturedBlackPieces;
 
     private TerminalChess() {
         this.state = State.MENU;
@@ -52,7 +52,7 @@ public class TerminalChess {
     private void showMenu() {
         displayMenu();
         Optional<String> chosenStateOption = Optional.empty();
-        while (!chosenStateOption.isPresent() || isNull(chosenStateOption.get())) {
+        while (!chosenStateOption.isPresent()) {
             chosenStateOption = promptPlayer();
         }
         State chosenState = State.getByName(chosenStateOption.get());
@@ -76,7 +76,7 @@ public class TerminalChess {
         
         if (selectedPieceExistsAndIsYours) {
             Piece pieceToMove = currentSpace.getPiece();
-            boolean isMoveValid = !pieceToMove.isInvalidMove(currentSpace, proposedSpace, board);
+            boolean isMoveValid = pieceToMove.isValidMove(currentSpace, proposedSpace, board);
             if (isMoveValid) {
                 boolean isCapturing = proposedSpace.hasPiece();
                 if (isCapturing) {
@@ -93,7 +93,7 @@ public class TerminalChess {
     private List<Space> getProposedMove() {
         List<Space> proposedMove = new ArrayList<>();
         Optional<String> moveOption = Optional.empty();
-        while (!moveOption.isPresent() || isNull(moveOption.get())) {
+        while (!moveOption.isPresent()) {
             moveOption = promptPlayer();
             if (isExiting(moveOption.get())) {
                 state = State.MENU;
