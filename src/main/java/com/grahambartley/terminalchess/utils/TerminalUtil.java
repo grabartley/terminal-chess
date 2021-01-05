@@ -3,11 +3,11 @@ package com.grahambartley.terminalchess.utils;
 import static java.lang.System.in;
 import static java.lang.System.out;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 import com.grahambartley.terminalchess.board.Board;
 import com.grahambartley.terminalchess.board.Space;
@@ -16,7 +16,7 @@ import com.grahambartley.terminalchess.constants.VerticalSpaceIndex;
 import com.grahambartley.terminalchess.pieces.Piece;
 
 public class TerminalUtil {
-  private static Scanner scanner = new Scanner(in);
+  private static final Scanner scanner = new Scanner(in);
 
   public static void display(String text) {
     stream(text.split("\n")).forEach(out::println);
@@ -40,7 +40,7 @@ public class TerminalUtil {
     String playerInput = scanner.nextLine();
     newLine();
 
-    return playerInput == "" ? Optional.empty() : Optional.ofNullable(playerInput);
+    return playerInput.equals("") ? Optional.empty() : Optional.of(playerInput);
   }
 
   public static void displayMenu() {
@@ -87,6 +87,6 @@ public class TerminalUtil {
   }
 
   private static void displayCapturedPieces(List<Piece> capturedPieces) {
-    displayExact("\t" + capturedPieces.stream().map(Piece::getEmoji).collect(Collectors.joining(" ")));
+    displayExact("\t" + capturedPieces.stream().map(Piece::getEmoji).collect(joining(" ")));
   }
 }

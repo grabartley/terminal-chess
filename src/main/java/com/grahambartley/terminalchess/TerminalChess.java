@@ -76,7 +76,11 @@ public class TerminalChess {
         
         if (selectedPieceExistsAndIsYours) {
             Piece pieceToMove = currentSpace.getPiece();
-            boolean isMoveValid = pieceToMove.isValidMove(currentSpace, proposedSpace, board);
+            // simulate moving piece to calculate valid move sets afterwards
+            pieceToMove.move(currentSpace, proposedSpace);
+            calculateValidMoveSets();
+            pieceToMove.move(proposedSpace, currentSpace);
+            boolean isMoveValid = pieceToMove.isValidMoveAdvanced(currentSpace, proposedSpace, board);
             if (isMoveValid) {
                 boolean isCapturing = proposedSpace.hasPiece();
                 if (isCapturing) {
@@ -136,5 +140,12 @@ public class TerminalChess {
             capturedWhitePieces.add(pieceToCapture);
         }
         captureSpace.setPiece(null);
+    }
+
+    private void calculateValidMoveSets() {
+        for (Space space : board.getActiveSpaces()) {
+            Piece piece = space.getPiece();
+            piece.calculateValidMoveSet(space, board);
+        }
     }
 }
