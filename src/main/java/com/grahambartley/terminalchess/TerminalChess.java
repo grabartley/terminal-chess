@@ -129,31 +129,33 @@ public class TerminalChess {
 
     private List<Space> getProposedMove() {
         List<Space> proposedMove = new ArrayList<>();
-        Optional<String> moveOption = Optional.empty();
-        while (!moveOption.isPresent()) {
-            moveOption = promptPlayer();
-            // TODO: fix this check (breaks if no input given)
-            if (isExiting(moveOption.get())) {
+        boolean isMoveOptionValid = false;
+        while (!isMoveOptionValid) {
+            Optional<String> moveOption = promptPlayer();
+            if (!moveOption.isPresent()) {
+                continue;
+            }
+            String moveString = moveOption.get();
+            if (isExiting(moveString)) {
                 state = State.MENU;
                 return null;
-            } else if (moveOption.get().split(" ").length != 2) {
-                moveOption = Optional.empty();
-            } else {
-                String[] move = moveOption.get().split(" ");
-                Optional<Space> currentSpaceOptional = board.getSpace(
-                    move[0].charAt(1),
-                    move[0].charAt(0)
-                );
-                Optional<Space> proposedSpaceOptional = board.getSpace(
-                    move[1].charAt(1),
-                    move[1].charAt(0)
-                );
-                if (!currentSpaceOptional.isPresent() || !proposedSpaceOptional.isPresent()) {
-                    moveOption = Optional.empty();
-                    display(Messages.INVALID_MOVE_ERROR.getText());
-                } else {
-                    proposedMove.addAll(asList(currentSpaceOptional.get(), proposedSpaceOptional.get()));
-                }
+            }
+            if (moveString.split(" ").length == 2) {
+                String[] move = moveString.split(" ");
+                try {
+                    Optional<Space> currentSpaceOptional = board.getSpace(
+                        move[0].charAt(1),
+                        move[0].charAt(0)
+                    );
+                    Optional<Space> proposedSpaceOptional = board.getSpace(
+                        move[1].charAt(1),
+                        move[1].charAt(0)
+                    );
+                    if (currentSpaceOptional.isPresent() && proposedSpaceOptional.isPresent()) {
+                        proposedMove.addAll(asList(currentSpaceOptional.get(), proposedSpaceOptional.get()));
+                        isMoveOptionValid = true;
+                    }
+                } catch (IndexOutOfBoundsException ignored) {}
             }
         }
 
