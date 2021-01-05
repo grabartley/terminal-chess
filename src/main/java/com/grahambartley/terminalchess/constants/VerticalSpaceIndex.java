@@ -15,8 +15,8 @@ public enum VerticalSpaceIndex {
   G(6, "G"),
   H(7, "H");
 
-  private int index;
-  private String name;
+  private final int index;
+  private final String name;
 
   public static String getNameByIndex(int index) {
     for (VerticalSpaceIndex e : values()) {
