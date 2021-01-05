@@ -1,5 +1,7 @@
 package com.grahambartley.terminalchess.pieces;
 
+import static java.lang.Math.abs;
+
 public class Queen extends Piece {
   public Queen(boolean isWhite) {
     this.isWhite = isWhite;
@@ -9,6 +11,9 @@ public class Queen extends Piece {
 
   @Override
   public boolean isValidMove(int hDiff, int vDiff, boolean isCapturing) {
-    return true;
+    boolean isMovingHorizontally = hDiff == 0 && vDiff != 0;
+    boolean isMovingVertically = vDiff == 0 && hDiff != 0;
+    boolean isMovingDiagonally = abs(hDiff) == abs(vDiff);
+    return isMovingHorizontally || isMovingVertically || isMovingDiagonally;
   }
 }

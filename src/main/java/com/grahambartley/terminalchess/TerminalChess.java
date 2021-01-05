@@ -132,6 +132,7 @@ public class TerminalChess {
         Optional<String> moveOption = Optional.empty();
         while (!moveOption.isPresent()) {
             moveOption = promptPlayer();
+            // TODO: fix this check (breaks if no input given)
             if (isExiting(moveOption.get())) {
                 state = State.MENU;
                 return null;
