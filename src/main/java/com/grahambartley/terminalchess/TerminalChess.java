@@ -1,9 +1,6 @@
 package com.grahambartley.terminalchess;
 
-import static com.grahambartley.terminalchess.utils.TerminalUtil.displayMenu;
-import static com.grahambartley.terminalchess.utils.TerminalUtil.promptPlayer;
-import static com.grahambartley.terminalchess.utils.TerminalUtil.displayBoard;
-import static com.grahambartley.terminalchess.utils.TerminalUtil.display;
+import static com.grahambartley.terminalchess.utils.TerminalUtil.*;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Arrays.asList;
@@ -28,8 +25,8 @@ public class TerminalChess {
     private final List<Piece> capturedWhitePieces;
     private final List<Piece> capturedBlackPieces;
 
-    private TerminalChess() {
-        this.state = State.MENU;
+    private TerminalChess(State state) {
+        this.state = state;
         this.board = Board.getInstance();
         this.isWhiteTurn = true;
         this.capturedWhitePieces = new ArrayList<>();
@@ -37,7 +34,14 @@ public class TerminalChess {
     }
 
     public static void main(String[] args) {
-        new TerminalChess().play();
+        if (args.length > 0) {
+            State state = State.getByName(args[0]);
+            if (nonNull(state)) {
+                new TerminalChess(state).play();
+                return;
+            }
+        }
+        new TerminalChess(State.MENU).play();
     }
 
     private void play() {
@@ -45,8 +49,12 @@ public class TerminalChess {
         while (state != State.EXIT) {
             if (state == State.MENU) {
                 showMenu();
+            } else if (state == State.NEW_GAME) {
+                newGame();
             } else if (state == State.PLAY) {
                 takeTurn();
+            } else if (state == State.CHECKMATE) {
+                showCheckmate();
             }
         }
     }
@@ -61,6 +69,12 @@ public class TerminalChess {
         if (nonNull(chosenState)) {
             state = chosenState;
         }
+    }
+
+    private void newGame() {
+        state = State.EXIT;
+        String[] newGameArgs = {"P"};
+        new Thread(() -> main(newGameArgs)).start();
     }
 
     private void takeTurn() {
@@ -83,6 +97,11 @@ public class TerminalChess {
             if (isMoveValid) {
                 Optional<Piece> capturedPiece = pieceToMove.move(currentSpace, proposedSpace);
                 capturedPiece.ifPresent(this::performCapture);
+                if (isInCheckmate(!isWhiteTurn)) {
+                    display(Messages.CHECKMATE.getText());
+                    state = State.CHECKMATE;
+                    return;
+                }
                 if (isInCheck(!isWhiteTurn)) {
                     display(Messages.CHECK.getText());
                 }
@@ -91,6 +110,21 @@ public class TerminalChess {
             }
         }
         display(Messages.INVALID_MOVE_ERROR.getText());
+    }
+
+    private void showCheckmate() {
+        displayBoard(board, capturedWhitePieces, capturedBlackPieces, isWhiteTurn);
+        newLine();
+        display("[N]ew game");
+        display("[M]enu");
+        Optional<String> chosenStateOption = Optional.empty();
+        while (!chosenStateOption.isPresent()) {
+            chosenStateOption = promptPlayer();
+        }
+        State chosenState = State.getByName(chosenStateOption.get());
+        if (nonNull(chosenState)) {
+            state = chosenState;
+        }
     }
 
     private List<Space> getProposedMove() {
@@ -156,6 +190,23 @@ public class TerminalChess {
             .collect(toList());
         return enemyPieces.stream()
             .anyMatch(enemyPiece -> enemyPiece.getValidMoveSet().contains(friendlyKingSpace));
+    }
+
+    private boolean isInCheckmate(boolean isWhite) {
+        if (!isInCheck(isWhite)) {
+            return false;
+        }
+        List<Space> friendlySpaces = board.getActiveSpaces(isWhite);
+        for (Space currentSpace : friendlySpaces) {
+            Piece piece = currentSpace.getPiece();
+            List<Space> validMoveSet = piece.getValidMoveSet();
+            for (Space proposedSpace : validMoveSet) {
+                if (!isMovingIntoCheck(piece, currentSpace, proposedSpace)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void calculateValidMoveSets() {

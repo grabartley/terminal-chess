@@ -53,8 +53,8 @@ public class TerminalUtil {
     "      ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝     ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝  \n"  + 
     "                                                                                                                  \n"  + 
     "    ");
-    display("[P]lay the game");
-    display("[E]xit the game");
+    display("[N]ew game");
+    display("[E]xit");
   }
 
   public static void displayBoard(Board board, List<Piece> capturedWhitePieces, List<Piece> capturedBlackPieces, boolean isWhite) {

@@ -45,10 +45,6 @@ public class Board {
   }
 
   public void setUpPieces() {
-    for (int i = 0; i < 8; i++) {
-      board[1][i].setPiece(new Pawn(true));
-      board[6][i].setPiece(new Pawn(false));
-    }
     board[0][0].setPiece(new Rook(true));
     board[0][1].setPiece(new Knight(true));
     board[0][2].setPiece(new Bishop(true));
@@ -57,7 +53,14 @@ public class Board {
     board[0][5].setPiece(new Bishop(true));
     board[0][6].setPiece(new Knight(true));
     board[0][7].setPiece(new Rook(true));
-
+    for (int i = 0; i < 8; i++) {
+      board[1][i].setPiece(new Pawn(true));
+      board[2][i].setPiece(null);
+      board[3][i].setPiece(null);
+      board[4][i].setPiece(null);
+      board[5][i].setPiece(null);
+      board[6][i].setPiece(new Pawn(false));
+    }
     board[7][0].setPiece(new Rook(false));
     board[7][1].setPiece(new Knight(false));
     board[7][2].setPiece(new Bishop(false));
