@@ -150,18 +150,12 @@ public class TerminalChess {
 
     private boolean isInCheck(boolean isWhite) {
         calculateValidMoveSets();
-        boolean isInCheck = false;
         Space friendlyKingSpace = board.getSpacesContainingPiece(King.class, isWhite).get(0);
         List<Piece> enemyPieces = board.getActiveSpaces(!isWhite).stream()
             .map(Space::getPiece)
             .collect(toList());
-        for (Piece enemyPiece : enemyPieces) {
-            if (enemyPiece.getValidMoveSet().contains(friendlyKingSpace)) {
-                isInCheck = true;
-                break;
-            }
-        }
-        return isInCheck;
+        return enemyPieces.stream()
+            .anyMatch(enemyPiece -> enemyPiece.getValidMoveSet().contains(friendlyKingSpace));
     }
 
     private void calculateValidMoveSets() {

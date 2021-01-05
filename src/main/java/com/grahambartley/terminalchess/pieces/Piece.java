@@ -7,9 +7,10 @@ import com.grahambartley.terminalchess.utils.CommonUtil;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @Getter
 @Setter
@@ -51,12 +52,8 @@ public abstract class Piece {
   public abstract boolean isValidMove(int hDiff, int vDiff, boolean isCapturing);
 
   public void calculateValidMoveSet(Space currentSpace, Board board) {
-    List<Space> localValidMoveSet = new ArrayList<>();
-    for (Space space : board.getAllSpaces()) {
-      if (isValidMove(currentSpace, space, board)) {
-        localValidMoveSet.add(space);
-      }
-    }
-    validMoveSet = localValidMoveSet;
+    validMoveSet = board.getAllSpaces().stream()
+      .filter(space -> isValidMove(currentSpace, space, board))
+      .collect(toList());
   }
 }
