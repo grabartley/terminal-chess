@@ -2,16 +2,11 @@ package com.grahambartley.terminalchess.pieces;
 
 import static java.lang.Math.abs;
 
-import com.grahambartley.terminalchess.board.Space;
-
 public class Pawn extends Piece {
-  private boolean hasMoved;
-
   public Pawn(boolean isWhite) {
     this.isWhite = isWhite;
     this.isAbleToJump = false;
     this.emoji = isWhite ? "♙" : "♟";
-    this.hasMoved = false;
   }
 
   @Override
@@ -23,11 +18,5 @@ public class Pawn extends Piece {
       return isMovingDiagonallyForwardOne;
     }
     return isMovingForwardOne || isMovingForwardTwoOnFirstMove;
-  }
-
-  @Override
-  public void move(Space currentSpace, Space proposedSpace) {
-    super.move(currentSpace, proposedSpace);
-    hasMoved = true;
   }
 }

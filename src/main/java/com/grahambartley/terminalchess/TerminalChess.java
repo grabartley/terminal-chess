@@ -7,6 +7,7 @@ import static com.grahambartley.terminalchess.utils.TerminalUtil.display;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.grahambartley.terminalchess.board.Board;
 import com.grahambartley.terminalchess.board.Space;
 import com.grahambartley.terminalchess.constants.Messages;
 import com.grahambartley.terminalchess.constants.State;
+import com.grahambartley.terminalchess.pieces.King;
 import com.grahambartley.terminalchess.pieces.Piece;
 
 import java.util.Optional;
@@ -76,11 +78,8 @@ public class TerminalChess {
         
         if (selectedPieceExistsAndIsYours) {
             Piece pieceToMove = currentSpace.getPiece();
-            // simulate moving piece to calculate valid move sets afterwards
-            pieceToMove.move(currentSpace, proposedSpace);
-            calculateValidMoveSets();
-            pieceToMove.move(proposedSpace, currentSpace);
-            boolean isMoveValid = pieceToMove.isValidMoveAdvanced(currentSpace, proposedSpace, board);
+            boolean isMovingIntoCheck = isMovingIntoCheck(pieceToMove, currentSpace, proposedSpace);
+            boolean isMoveValid = pieceToMove.isValidMove(currentSpace, proposedSpace, board) && !isMovingIntoCheck;
             if (isMoveValid) {
                 boolean isCapturing = proposedSpace.hasPiece();
                 if (isCapturing) {
@@ -140,6 +139,29 @@ public class TerminalChess {
             capturedWhitePieces.add(pieceToCapture);
         }
         captureSpace.setPiece(null);
+    }
+
+    private boolean isMovingIntoCheck(Piece piece, Space currentSpace, Space proposedSpace) {
+        piece.simulateMove(currentSpace, proposedSpace);
+        boolean isPieceMovingIntoCheck = isInCheck(piece.isWhite());
+        piece.simulateMove(proposedSpace, currentSpace);
+        return isPieceMovingIntoCheck;
+    }
+
+    private boolean isInCheck(boolean isWhite) {
+        calculateValidMoveSets();
+        boolean isInCheck = false;
+        Space friendlyKingSpace = board.getSpacesContainingPiece(King.class, isWhite).get(0);
+        List<Piece> enemyPieces = board.getActiveSpaces(!isWhite).stream()
+            .map(Space::getPiece)
+            .collect(toList());
+        for (Piece enemyPiece : enemyPieces) {
+            if (enemyPiece.getValidMoveSet().contains(friendlyKingSpace)) {
+                isInCheck = true;
+                break;
+            }
+        }
+        return isInCheck;
     }
 
     private void calculateValidMoveSets() {
