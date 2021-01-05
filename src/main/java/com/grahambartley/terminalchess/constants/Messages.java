@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Messages {
-  INVALID_MOVE_ERROR("Invalid move");
+  INVALID_MOVE_ERROR("Invalid move"),
+  CHECK("Check!");
 
   private final String text;
 }

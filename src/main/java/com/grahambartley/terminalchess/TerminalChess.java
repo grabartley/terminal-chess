@@ -86,6 +86,9 @@ public class TerminalChess {
                     performCapture(proposedSpace);
                 }
                 pieceToMove.move(currentSpace, proposedSpace);
+                if (isInCheck(!isWhiteTurn)) {
+                    display(Messages.CHECK.getText());
+                }
                 isWhiteTurn = !isWhiteTurn;
                 return;
             }
