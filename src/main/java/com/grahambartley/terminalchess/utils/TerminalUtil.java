@@ -57,31 +57,59 @@ public class TerminalUtil {
     display("[E]xit the game");
   }
 
-  public static void displayBoard(Board board, List<Piece> capturedWhitePieces, List<Piece> capturedBlackPieces) {
+  public static void displayBoard(Board board, List<Piece> capturedWhitePieces, List<Piece> capturedBlackPieces, boolean isWhite) {
     newLine();
-    for (int i = 7; i > -1; i--) {
-      String h = HorizontalSpaceIndex.getNameByIndex(i);
-      displayExact(" " + h + " ");
-      for (int j = 0; j < 8; j++) {
-        String v = VerticalSpaceIndex.getNameByIndex(j);
-        Optional<Space> optionalSpace = board.getSpace(h, v);
-        if (optionalSpace.isPresent()) {
-          Space space = optionalSpace.get();
-          String piece = space.hasPiece() ? space.getPiece().getEmoji() : " ";
-          displayExact("[" + piece + "]");
+    if (isWhite) {
+      for (int i = 7; i > -1; i--) {
+        String h = HorizontalSpaceIndex.getNameByIndex(i);
+        displayExact(" " + h + " ");
+        for (int j = 0; j < 8; j++) {
+          String v = VerticalSpaceIndex.getNameByIndex(j);
+          Optional<Space> optionalSpace = board.getSpace(h, v);
+          if (optionalSpace.isPresent()) {
+            Space space = optionalSpace.get();
+            String piece = space.hasPiece() ? space.getPiece().getEmoji() : " ";
+            displayExact("[" + piece + "]");
+          }
         }
+        if (i == 0) {
+          displayCapturedPieces(capturedBlackPieces);
+        }
+        if (i == 7) {
+          displayCapturedPieces(capturedWhitePieces);
+        }
+        newLine();
       }
-      if (i == 0) {
-        displayCapturedPieces(capturedBlackPieces);
+      displayExact("  ");
+      for (VerticalSpaceIndex letter : VerticalSpaceIndex.values()) {
+        displayExact("  " + letter.getName());
       }
-      if (i == 7) {
-        displayCapturedPieces(capturedWhitePieces);
+    } else {
+      for (int i = 0; i < 8; i++) {
+        String h = HorizontalSpaceIndex.getNameByIndex(i);
+        displayExact(" " + h + " ");
+        for (int j = 7; j > -1; j--) {
+          String v = VerticalSpaceIndex.getNameByIndex(j);
+          Optional<Space> optionalSpace = board.getSpace(h, v);
+          if (optionalSpace.isPresent()) {
+            Space space = optionalSpace.get();
+            String piece = space.hasPiece() ? space.getPiece().getEmoji() : " ";
+            displayExact("[" + piece + "]");
+          }
+        }
+        if (i == 0) {
+          displayCapturedPieces(capturedBlackPieces);
+        }
+        if (i == 7) {
+          displayCapturedPieces(capturedWhitePieces);
+        }
+        newLine();
       }
-      newLine();
-    }
-    displayExact("  ");
-    for (VerticalSpaceIndex letter : VerticalSpaceIndex.values()) {
-      displayExact("  " + letter.getName());
+      displayExact("  ");
+      for (int j = 7; j > -1; j--) {
+        String v = VerticalSpaceIndex.getNameByIndex(j);
+        displayExact("  " + v);
+      }
     }
     newLine();
   }

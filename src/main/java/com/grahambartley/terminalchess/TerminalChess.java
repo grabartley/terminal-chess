@@ -65,7 +65,7 @@ public class TerminalChess {
 
     private void takeTurn() {
         display((isWhiteTurn ? "White" : "Black") + " turn");
-        displayBoard(board, capturedWhitePieces, capturedBlackPieces);
+        displayBoard(board, capturedWhitePieces, capturedBlackPieces, isWhiteTurn);
         List<Space> proposedMove = getProposedMove();
         if (isNull(proposedMove)) {
             return;
@@ -81,11 +81,8 @@ public class TerminalChess {
             boolean isMovingIntoCheck = isMovingIntoCheck(pieceToMove, currentSpace, proposedSpace);
             boolean isMoveValid = pieceToMove.isValidMove(currentSpace, proposedSpace, board) && !isMovingIntoCheck;
             if (isMoveValid) {
-                boolean isCapturing = proposedSpace.hasPiece();
-                if (isCapturing) {
-                    performCapture(proposedSpace);
-                }
-                pieceToMove.move(currentSpace, proposedSpace);
+                Optional<Piece> capturedPiece = pieceToMove.move(currentSpace, proposedSpace);
+                capturedPiece.ifPresent(this::performCapture);
                 if (isInCheck(!isWhiteTurn)) {
                     display(Messages.CHECK.getText());
                 }
@@ -134,20 +131,20 @@ public class TerminalChess {
             input.equalsIgnoreCase("menu");
     }
 
-    private void performCapture(Space captureSpace) {
-        Piece pieceToCapture = captureSpace.getPiece();
+    private void performCapture(Piece piece) {
         if (isWhiteTurn) {
-            capturedBlackPieces.add(pieceToCapture);
+            capturedBlackPieces.add(piece);
         } else {
-            capturedWhitePieces.add(pieceToCapture);
+            capturedWhitePieces.add(piece);
         }
-        captureSpace.setPiece(null);
     }
 
     private boolean isMovingIntoCheck(Piece piece, Space currentSpace, Space proposedSpace) {
-        piece.simulateMove(currentSpace, proposedSpace);
+        Optional<Piece> capturedPiece = piece.simulateMove(currentSpace, proposedSpace);
         boolean isPieceMovingIntoCheck = isInCheck(piece.isWhite());
         piece.simulateMove(proposedSpace, currentSpace);
+        // put the captured piece back in place
+        capturedPiece.ifPresent(proposedSpace::setPiece);
         return isPieceMovingIntoCheck;
     }
 

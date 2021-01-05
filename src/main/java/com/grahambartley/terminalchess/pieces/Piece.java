@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -19,14 +20,19 @@ public abstract class Piece {
   public String emoji;
   public List<Space> validMoveSet;
 
-  public void simulateMove(Space currentSpace, Space proposedSpace) {
+  public Optional<Piece> simulateMove(Space currentSpace, Space proposedSpace) {
+    Optional<Piece> capturedPiece = proposedSpace.hasPiece() ?
+      Optional.of(proposedSpace.getPiece()) :
+      Optional.empty();
     currentSpace.setPiece(null);
     proposedSpace.setPiece(this);
+    return capturedPiece;
   }
 
-  public void move(Space currentSpace, Space proposedSpace) {
-    simulateMove(currentSpace, proposedSpace);
+  public Optional<Piece> move(Space currentSpace, Space proposedSpace) {
+    Optional<Piece> capturedPiece = simulateMove(currentSpace, proposedSpace);
     this.hasMoved = true;
+    return capturedPiece;
   }
 
   public boolean isValidMove(Space currentSpace, Space proposedSpace, Board board) {
