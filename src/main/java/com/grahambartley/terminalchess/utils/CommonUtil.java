@@ -7,10 +7,14 @@ import com.grahambartley.terminalchess.constants.VerticalSpaceIndex;
 import static java.util.Objects.nonNull;
 
 public class CommonUtil {
-  public static int getHIndex(Space space) {
-    Integer hIndex = HorizontalSpaceIndex.getIndexByName(space.getH());
+  public static int getHIndex(String h) {
+    Integer hIndex = HorizontalSpaceIndex.getIndexByName(h);
 
-    return nonNull(hIndex) ? hIndex : 0;
+    return nonNull(hIndex) ? hIndex : -1;
+  }
+
+  public static int getHIndex(Space space) {
+    return getHIndex(space.getH());
   }
 
   public static int getHDiff(Space currentSpace, Space proposedSpace) {
@@ -20,10 +24,14 @@ public class CommonUtil {
     return proposedHIndex - currentHIndex;
   }
 
-  public static int getVIndex(Space space) {
-    Integer vIndex = VerticalSpaceIndex.getIndexByName(space.getV());
+  public static int getVIndex(String v) {
+    Integer vIndex = VerticalSpaceIndex.getIndexByName(v);
 
-    return nonNull(vIndex) ? vIndex : 0;
+    return nonNull(vIndex) ? vIndex : -1;
+  }
+
+  public static int getVIndex(Space space) {
+    return getVIndex(space.getV());
   }
 
   public static int getVDiff(Space currentSpace, Space proposedSpace) {

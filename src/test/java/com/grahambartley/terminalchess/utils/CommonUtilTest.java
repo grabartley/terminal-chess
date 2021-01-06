@@ -8,10 +8,10 @@ import static org.junit.Assert.assertEquals;
 public class CommonUtilTest {
   @Test
   public void testGetHIndex_valid() {
-    Space space = new Space("2", "C", null);
+    String h = "2";
     int expected = 1;
 
-    int actual = CommonUtil.getHIndex(space);
+    int actual = CommonUtil.getHIndex(h);
 
     assertEquals(expected, actual);
   }
@@ -19,7 +19,17 @@ public class CommonUtilTest {
   @Test
   public void testGetHIndex_invalid() {
     Space space = new Space("-2", "Z", null);
-    int expected = 0;
+    int expected = -1;
+
+    int actual = CommonUtil.getHIndex(space);
+
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testGetHIndex_SpaceValid() {
+    Space space = new Space("2", "C", null);
+    int expected = 1;
 
     int actual = CommonUtil.getHIndex(space);
 
@@ -47,10 +57,10 @@ public class CommonUtilTest {
 
   @Test
   public void testGetVIndex_valid() {
-    Space space = new Space("2", "C", null);
+    String v = "C";
     int expected = 2;
 
-    int actual = CommonUtil.getVIndex(space);
+    int actual = CommonUtil.getVIndex(v);
 
     assertEquals(expected, actual);
   }
@@ -58,7 +68,17 @@ public class CommonUtilTest {
   @Test
   public void testGetVIndex_invalid() {
     Space space = new Space("-2", "Z", null);
-    int expected = 0;
+    int expected = -1;
+
+    int actual = CommonUtil.getVIndex(space);
+
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testGetVIndex_SpaceValid() {
+    Space space = new Space("2", "C", null);
+    int expected = 2;
 
     int actual = CommonUtil.getVIndex(space);
 

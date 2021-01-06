@@ -17,7 +17,7 @@ import com.grahambartley.terminalchess.utils.CommonUtil;
 
 public class Board {
   private static Board instance;
-  private final Space[][] board;
+  protected final Space[][] board;
   private final List<Space> allSpacesFlattened;
 
   private Board() {
@@ -76,12 +76,12 @@ public class Board {
   }
 
   public Optional<Space> getSpace(String h, String v) {
-    Integer hIndex = HorizontalSpaceIndex.getIndexByName(h);
-    Integer vIndex = VerticalSpaceIndex.getIndexByName(v);
+    int hIndex = CommonUtil.getHIndex(h);
+    int vIndex = CommonUtil.getVIndex(v);
 
     try {
       return Optional.of(board[hIndex][vIndex]);
-    } catch (IndexOutOfBoundsException | NullPointerException e) {
+    } catch (IndexOutOfBoundsException e) {
       return Optional.empty();
     }
   }
@@ -97,7 +97,7 @@ public class Board {
   }
 
   public List<Space> getActiveSpaces() {
-    return allSpacesFlattened.stream()
+    return getAllSpaces().stream()
       .filter(Space::hasPiece)
       .collect(toList());
   }
@@ -119,52 +119,60 @@ public class Board {
     int currentVIndex = CommonUtil.getVIndex(currentSpace);
     int hDiff = CommonUtil.getHDiff(currentSpace, proposedSpace);
     int vDiff = CommonUtil.getVDiff(currentSpace, proposedSpace);
+    boolean isSameSpace = hDiff == 0 && vDiff == 0;
+    boolean isAdjacentSpace = hDiff == 1 || hDiff == -1 || vDiff == 1 || vDiff == -1;
+    boolean isDiagonalSpace = abs(hDiff) == abs(vDiff);
+    boolean isHorizontalSpace = hDiff == 0;
 
-    // not moving at all
-    if (hDiff == 0 && vDiff == 0) {
+    if (isSameSpace || isAdjacentSpace) {
       return emptyList();
     }
 
-    // moving to adjacent space
-    if (hDiff == 1 || hDiff == -1 || vDiff == 1 || vDiff == -1) {
-      return emptyList();
+    if (isDiagonalSpace) {
+      return getSpacesBetweenDiagonal(currentHIndex, currentVIndex, hDiff, vDiff);
     }
 
+    if (isHorizontalSpace) {
+      return getSpacesBetweenHorizontal(currentHIndex, currentVIndex, vDiff);
+    }
+
+    return getSpacesBetweenVertical(currentHIndex, currentVIndex, hDiff);
+  }
+
+  protected List<Space> getSpacesBetweenDiagonal(int currentHIndex, int currentVIndex, int hDiff, int vDiff) {
     List<Space> spacesBetween = new ArrayList<>();
+    int numOfSpacesBetween = abs(hDiff) - 1;
 
-    // moving diagonally
-    if (abs(hDiff) == abs(vDiff)) {
-      int numOfSpacesBetween = abs(hDiff) - 1;
-
-      for (int i = 1; i <= numOfSpacesBetween; i++) {
-        int hIndex = currentHIndex + (hDiff < 0 ? -1 * i : i);
-        int vIndex = currentVIndex + (vDiff < 0 ? -1 * i : i);
-        spacesBetween.add(board[hIndex][vIndex]);
-      }
-
-      return spacesBetween;
+    for (int i = 1; i <= numOfSpacesBetween; i++) {
+      int hIndex = currentHIndex + (hDiff < 0 ? -1 * i : i);
+      int vIndex = currentVIndex + (vDiff < 0 ? -1 * i : i);
+      spacesBetween.add(board[hIndex][vIndex]);
     }
 
-    // moving horizontally
-    int numOfSpacesBetween;
-    if (hDiff == 0) {
-      numOfSpacesBetween = abs(vDiff) - 1;
+    return spacesBetween;
+  }
 
-      for (int i = 1; i <= numOfSpacesBetween; i++) {
-        int vIndex = currentVIndex + (vDiff < 0 ? -1 * i : i);
-        spacesBetween.add(board[currentHIndex][vIndex]);
-      }
+  protected List<Space> getSpacesBetweenHorizontal(int currentHIndex, int currentVIndex, int vDiff) {
+    List<Space> spacesBetween = new ArrayList<>();
+    int numOfSpacesBetween = abs(vDiff) - 1;
 
-    // moving vertically
-    } else {
-      numOfSpacesBetween = abs(hDiff) - 1;
-
-      for (int i = 1; i <= numOfSpacesBetween; i++) {
-        int hIndex = currentHIndex + (hDiff < 0 ? -1 * i : i);
-        spacesBetween.add(board[hIndex][currentVIndex]);
-      }
-
+    for (int i = 1; i <= numOfSpacesBetween; i++) {
+      int vIndex = currentVIndex + (vDiff < 0 ? -1 * i : i);
+      spacesBetween.add(board[currentHIndex][vIndex]);
     }
+
+    return spacesBetween;
+  }
+
+  protected List<Space> getSpacesBetweenVertical(int currentHIndex, int currentVIndex, int hDiff) {
+    List<Space> spacesBetween = new ArrayList<>();
+    int numOfSpacesBetween = abs(hDiff) - 1;
+
+    for (int i = 1; i <= numOfSpacesBetween; i++) {
+      int hIndex = currentHIndex + (hDiff < 0 ? -1 * i : i);
+      spacesBetween.add(board[hIndex][currentVIndex]);
+    }
+
     return spacesBetween;
   }
 }
