@@ -1,22 +1,26 @@
 package com.grahambartley.terminalchess.utils;
 
-import static java.lang.System.in;
-import static java.lang.System.out;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
-
 import com.grahambartley.terminalchess.board.Board;
 import com.grahambartley.terminalchess.board.Space;
 import com.grahambartley.terminalchess.constants.HorizontalSpaceIndex;
 import com.grahambartley.terminalchess.constants.VerticalSpaceIndex;
 import com.grahambartley.terminalchess.pieces.Piece;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
+
+import static java.lang.System.in;
+import static java.lang.System.out;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
+
 public class TerminalUtil {
-  private static final Scanner scanner = new Scanner(in);
+  private static Scanner scanner = new Scanner(in);
+
+  public static void resetScanner() {
+    scanner = new Scanner(in);
+  }
 
   public static void display(String text) {
     stream(text.split("\n")).forEach(out::println);

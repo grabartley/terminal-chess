@@ -1,23 +1,26 @@
 package com.grahambartley.terminalchess;
 
-import static com.grahambartley.terminalchess.utils.TerminalUtil.*;
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.grahambartley.terminalchess.board.Board;
 import com.grahambartley.terminalchess.board.Space;
 import com.grahambartley.terminalchess.constants.Messages;
 import com.grahambartley.terminalchess.constants.State;
 import com.grahambartley.terminalchess.pieces.King;
 import com.grahambartley.terminalchess.pieces.Piece;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import static com.grahambartley.terminalchess.utils.TerminalUtil.*;
+import static java.util.Arrays.asList;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toList;
+
+@Getter
+@Setter
 public class TerminalChess {
     private State state;
     private final Board board;
@@ -44,7 +47,7 @@ public class TerminalChess {
         new TerminalChess(State.MENU).play();
     }
 
-    private void play() {
+    protected void play() {
         board.setUpPieces();
         while (state != State.EXIT) {
             if (state == State.MENU) {
@@ -59,7 +62,7 @@ public class TerminalChess {
         }
     }
 
-    private void showMenu() {
+    protected void showMenu() {
         displayMenu();
         Optional<String> chosenStateOption = Optional.empty();
         while (!chosenStateOption.isPresent()) {
@@ -71,13 +74,13 @@ public class TerminalChess {
         }
     }
 
-    private void newGame() {
+    protected void newGame() {
         state = State.EXIT;
         String[] newGameArgs = {"P"};
         new Thread(() -> main(newGameArgs)).start();
     }
 
-    private void takeTurn() {
+    protected void takeTurn() {
         display((isWhiteTurn ? "White" : "Black") + " turn");
         displayBoard(board, capturedWhitePieces, capturedBlackPieces, isWhiteTurn);
         List<Space> proposedMove = getProposedMove();
@@ -112,7 +115,7 @@ public class TerminalChess {
         display(Messages.INVALID_MOVE_ERROR.getText());
     }
 
-    private void showCheckmate() {
+    protected void showCheckmate() {
         displayBoard(board, capturedWhitePieces, capturedBlackPieces, isWhiteTurn);
         newLine();
         display("[N]ew game");
@@ -127,7 +130,7 @@ public class TerminalChess {
         }
     }
 
-    private List<Space> getProposedMove() {
+    protected List<Space> getProposedMove() {
         List<Space> proposedMove = new ArrayList<>();
         boolean isMoveOptionValid = false;
         while (!isMoveOptionValid) {
@@ -168,7 +171,7 @@ public class TerminalChess {
             input.equalsIgnoreCase("menu");
     }
 
-    private void performCapture(Piece piece) {
+    protected void performCapture(Piece piece) {
         if (isWhiteTurn) {
             capturedBlackPieces.add(piece);
         } else {
@@ -176,7 +179,7 @@ public class TerminalChess {
         }
     }
 
-    private boolean isMovingIntoCheck(Piece piece, Space currentSpace, Space proposedSpace) {
+    protected boolean isMovingIntoCheck(Piece piece, Space currentSpace, Space proposedSpace) {
         Optional<Piece> capturedPiece = piece.simulateMove(currentSpace, proposedSpace);
         boolean isPieceMovingIntoCheck = isInCheck(piece.isWhite());
         piece.simulateMove(proposedSpace, currentSpace);
@@ -185,7 +188,7 @@ public class TerminalChess {
         return isPieceMovingIntoCheck;
     }
 
-    private boolean isInCheck(boolean isWhite) {
+    protected boolean isInCheck(boolean isWhite) {
         calculateValidMoveSets();
         Space friendlyKingSpace = board.getSpacesContainingPiece(King.class, isWhite).get(0);
         List<Piece> enemyPieces = board.getActiveSpaces(!isWhite).stream()
@@ -195,7 +198,7 @@ public class TerminalChess {
             .anyMatch(enemyPiece -> enemyPiece.getValidMoveSet().contains(friendlyKingSpace));
     }
 
-    private boolean isInCheckmate(boolean isWhite) {
+    protected boolean isInCheckmate(boolean isWhite) {
         if (!isInCheck(isWhite)) {
             return false;
         }

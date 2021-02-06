@@ -19,7 +19,7 @@ public abstract class Piece {
   public boolean isAbleToJump;
   public boolean hasMoved;
   public String emoji;
-  public List<Space> validMoveSet;
+  private List<Space> validMoveSet;
 
   public Optional<Piece> simulateMove(Space currentSpace, Space proposedSpace) {
     Optional<Piece> capturedPiece = proposedSpace.hasPiece() ?

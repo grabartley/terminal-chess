@@ -11,6 +11,6 @@ public class Bishop extends Piece {
 
   @Override
   public boolean isValidMove(int hDiff, int vDiff, boolean isCapturing) {
-    return abs(hDiff) == abs(vDiff);
+    return hDiff != 0 && abs(hDiff) == abs(vDiff);
   }
 }
