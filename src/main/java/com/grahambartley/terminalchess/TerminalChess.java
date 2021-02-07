@@ -28,12 +28,20 @@ public class TerminalChess {
     private final List<Piece> capturedWhitePieces;
     private final List<Piece> capturedBlackPieces;
 
-    private TerminalChess(State state) {
+    private TerminalChess(State state, Board board) {
         this.state = state;
-        this.board = Board.getInstance();
+        this.board = board;
         this.isWhiteTurn = true;
         this.capturedWhitePieces = new ArrayList<>();
         this.capturedBlackPieces = new ArrayList<>();
+    }
+
+    private TerminalChess(State state) {
+        this(state, Board.getInstance());
+    }
+
+    private TerminalChess() {
+        this(State.MENU);
     }
 
     public static void main(String[] args) {
@@ -44,7 +52,7 @@ public class TerminalChess {
                 return;
             }
         }
-        new TerminalChess(State.MENU).play();
+        new TerminalChess().play();
     }
 
     protected void play() {
@@ -165,7 +173,7 @@ public class TerminalChess {
         return proposedMove;
     }
 
-    private boolean isExiting(String input) {
+    protected boolean isExiting(String input) {
         return input.equalsIgnoreCase("exit") ||
             input.equalsIgnoreCase("quit") ||
             input.equalsIgnoreCase("menu");
@@ -215,7 +223,7 @@ public class TerminalChess {
         return true;
     }
 
-    private void calculateValidMoveSets() {
+    protected void calculateValidMoveSets() {
         for (Space space : board.getActiveSpaces()) {
             Piece piece = space.getPiece();
             piece.calculateValidMoveSet(space, board);
